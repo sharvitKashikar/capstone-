@@ -235,8 +235,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Kaggle community for dataset hosting and insights
 - Contributors and maintainers of the scikit-learn library
 
----
+## Contact project admins
 
-<p align="center">
- By Sharvit Kashikar,Atharva Dethe and Priyanshu Deshmukh
-</p> 
+- Sharvit Kashikar - [@sharvitkashikar](https://github.com/sharvitkashikar)
+- Atharva Dethe - [@Atharvadethe](https://github.com/Atharvadethe)
+- Priyanshu Deshmukh - [@priyanshu-deshmukh](https://github.com/priyanshu-deshmukh)
