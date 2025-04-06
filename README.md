@@ -200,12 +200,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Dataset by Paulo Cortez and Guilherme Pereira ([UCI Machine Learning Repository](https://archive.ics.uci.edu/))
+
 - Kaggle community for dataset hosting and insights
 - Contributors and maintainers of the scikit-learn library
 
 ---
 
 <p align="center">
-  Made with ❤️ by Sharvit Kashikar
+ By Sharvit Kashikar,Atharva Dethe and Priyanshu Deshmukh
 </p> 
