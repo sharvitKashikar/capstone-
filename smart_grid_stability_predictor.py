@@ -389,6 +389,49 @@ class SmartGridStabilityPredictor:
             logger.error("Error in prediction: %s", str(e))
             raise
 
+    def plot_feature_importance(self):
+        """
+        Plot and save feature importance visualization.
+        """
+        plt.figure(figsize=(12, 6))
+        importances = self.model.feature_importances_
+        indices = np.argsort(importances)[::-1]
+        
+        plt.title('Feature Importances in Smart Grid Stability Prediction', fontsize=14, pad=20)
+        plt.bar(range(len(importances)), importances[indices])
+        plt.xticks(range(len(importances)), [self.feature_names[i] for i in indices], rotation=45)
+        plt.xlabel('Features', fontsize=12)
+        plt.ylabel('Importance', fontsize=12)
+        plt.tight_layout()
+        plt.savefig('assets/feature_importance.png', dpi=300, bbox_inches='tight')
+        plt.close()
+
+    def plot_confusion_matrix(self, y_test, y_pred):
+        """
+        Plot and save confusion matrix visualization.
+        """
+        cm = confusion_matrix(y_test, y_pred)
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+        plt.title('Confusion Matrix for Smart Grid Stability Prediction', fontsize=14, pad=20)
+        plt.ylabel('True Label', fontsize=12)
+        plt.xlabel('Predicted Label', fontsize=12)
+        plt.tight_layout()
+        plt.savefig('assets/confusion_matrix.png', dpi=300, bbox_inches='tight')
+        plt.close()
+
+    def train_and_evaluate(self):
+        """
+        Train the model and evaluate its performance.
+        """
+        # ... existing training code ...
+        
+        # Generate and save visualizations
+        self.plot_feature_importance()
+        self.plot_confusion_matrix(y_test, y_pred)
+        
+        # ... rest of the evaluation code ...
+
 def main():
     """
     Main function to demonstrate the usage of the SmartGridStabilityPredictor class.

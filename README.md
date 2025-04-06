@@ -17,6 +17,7 @@
 - [Installation Guide](#-installation-guide)
 - [Usage Instructions](#-usage-instructions)
 - [Model Architecture](#-model-architecture)
+- [Model Analysis](#-model-analysis)
 - [Data Processing Pipeline](#-data-processing-pipeline)
 - [Results and Performance](#-results-and-performance)
 - [Contributing](#-contributing)
@@ -152,6 +153,32 @@ The system implements a Random Forest Classifier with the following specificatio
   - Recall
   - F1-Score
   - ROC-AUC
+
+## 📊 Model Analysis
+
+### Feature Importance Analysis
+The following visualization shows the relative importance of each feature in predicting grid stability:
+
+<p align="center">
+  <img src="assets/feature_importance.png" alt="Feature Importance Analysis" width="800"/>
+</p>
+
+This analysis reveals:
+- Reaction times (tau1-tau4) have significant impact on grid stability
+- Power consumption levels (p1-p4) show moderate influence
+- Price elasticity coefficients (g1-g4) demonstrate varying degrees of importance
+
+### Model Performance Visualization
+The confusion matrix below illustrates the model's prediction accuracy across different classes:
+
+<p align="center">
+  <img src="assets/confusion_matrix.png" alt="Confusion Matrix" width="700"/>
+</p>
+
+Key observations:
+- High true positive and true negative rates
+- Minimal false predictions
+- Balanced performance across both stable and unstable classifications
 
 ## 🔄 Data Processing Pipeline
 
