@@ -210,6 +210,10 @@ The model achieves robust performance metrics:
 - Recall: ~96%
 - F1-Score: ~95%
 - ROC-AUC: ~0.98
+- <p align="center">
+  <img src="assets/results.png" alt="Feature Importance Analysis" width="800"/>
+</p>
+
 
 ## 🤝 Contributing
 
