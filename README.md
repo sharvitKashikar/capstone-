@@ -7,9 +7,7 @@
 
 > An advanced machine learning system for predicting power grid stability using Random Forest Classification. This project implements sophisticated ML techniques to analyze and predict the stability of smart power grids based on various input parameters.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/sharvitKashikar/capstone-/main/assets/smart-grid.png" alt="Smart Grid Illustration" width="600"/>
-</p>
+
 
 ## 📋 Table of Contents
 - [Overview](#-overview)
