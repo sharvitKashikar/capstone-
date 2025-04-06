@@ -105,6 +105,3 @@ MIT License
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Acknowledgments
-
-- Dataset provided by Paulo Cortez and Guilherme Pereira via [UCI Machine Learning Repository](https://archive.ics.uci.edu/) 
