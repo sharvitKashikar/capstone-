@@ -266,11 +266,6 @@ class SmartGridStabilityPredictor:
     def visualize_grid_status(self, current_loads, node_stability, save_path=None):
         """
         Visualize the grid nodes with their load status and stability.
-        
-        Args:
-            current_loads (dict): Dictionary of node names and their load percentages
-            node_stability (dict): Dictionary of node names and their stability predictions
-            save_path (str, optional): Path to save the visualization
         """
         try:
             plt.figure(figsize=(12, 8))
@@ -286,21 +281,21 @@ class SmartGridStabilityPredictor:
                 row = idx // grid_size
                 col = idx % grid_size
                 
-                # Create node circle
+                # Create node circle with load percentage
                 circle = plt.Circle((col, row), 0.4, 
                                   color='green' if is_stable else 'red',
                                   alpha=0.6)
                 plt.gca().add_patch(circle)
                 
-                # Add node label and load
-                plt.text(col, row, f'{node}\n{load}%', 
+                # Add node label and load percentage
+                plt.text(col, row, f'{node}\n{load:.2f}%', 
                         ha='center', va='center',
-                        color='black' if is_stable else 'white')
+                        color='white' if not is_stable else 'black',
+                        fontweight='bold')
             
             plt.xlim(-0.5, grid_size)
             plt.ylim(-0.5, grid_size)
-            plt.title('Smart Grid Node Status')
-            plt.grid(True, linestyle='--', alpha=0.7)
+            plt.title('Smart Grid Node Status', pad=20, fontsize=14)
             
             # Add legend
             from matplotlib.patches import Patch
@@ -310,9 +305,11 @@ class SmartGridStabilityPredictor:
             ]
             plt.legend(handles=legend_elements, loc='upper right')
             
+            # Add grid lines
+            plt.grid(True, linestyle='--', alpha=0.3)
+            
             if save_path:
-                plt.savefig(save_path)
-                logger.info(f"Grid visualization saved to {save_path}")
+                plt.savefig(save_path, bbox_inches='tight', dpi=300)
             
             plt.show()
             
@@ -323,12 +320,6 @@ class SmartGridStabilityPredictor:
     def predict_stability(self, new_data):
         """
         Make predictions on new data and provide optimization suggestions if needed.
-        
-        Args:
-            new_data: Features for prediction
-            
-        Returns:
-            dict: Prediction results including stability, confidence, and optimization suggestions if unstable
         """
         try:
             # Ensure model is loaded
@@ -350,36 +341,33 @@ class SmartGridStabilityPredictor:
                 'timestamp': timestamp
             }
             
-            # If unstable, simulate current loads and get optimization suggestions
-            if prediction[0] == 0:  # Unstable prediction
-                # Simulate current loads based on features
-                # Note: This is a simplified example - in real world, you'd get actual load data
-                current_loads = {
-                    f'Node_{i+1}': min(100, max(0, float(val * 100))) 
-                    for i, val in enumerate(new_data.iloc[0])
-                }
-                
-                # Create node stability dict based on loads
-                node_stability = {
-                    node: load <= 80  # Consider nodes with >80% load as potentially unstable
-                    for node, load in current_loads.items()
-                }
-                
-                # Get optimization suggestions
-                optimization_suggestions = self.suggest_optimization_strategy(
-                    current_loads,
-                    node_stability
-                )
-                
-                # Add suggestions to result
-                result['optimization_suggestions'] = optimization_suggestions
-                
-                # Generate and save visualization
-                viz_path = f'grid_status_{timestamp.replace(":", "-")}.png'
-                self.visualize_grid_status(current_loads, node_stability, save_path=viz_path)
-                result['visualization_path'] = viz_path
-                
-                # Log the unstable state and suggestions
+            # Simulate current loads based on features
+            current_loads = {
+                f'Node_{i+1}': min(100, max(0, float(val * 100))) 
+                for i, val in enumerate(new_data.iloc[0])
+            }
+            
+            # Create node stability dict based on loads
+            node_stability = {
+                node: load <= 80  # Consider nodes with >80% load as potentially unstable
+                for node, load in current_loads.items()
+            }
+            
+            # Get optimization suggestions
+            optimization_suggestions = self.suggest_optimization_strategy(
+                current_loads,
+                node_stability
+            )
+            
+            # Add suggestions to result
+            result['optimization_suggestions'] = optimization_suggestions
+            
+            # Generate and save visualization
+            viz_path = f'grid_status_{timestamp.replace(":", "-")}.png'
+            self.visualize_grid_status(current_loads, node_stability, save_path=viz_path)
+            result['visualization_path'] = viz_path
+            
+            if not prediction[0]:  # If unstable
                 logger.warning("Unstable grid state detected!")
                 logger.info("Optimization suggestions generated: %s", optimization_suggestions)
             
@@ -459,14 +447,51 @@ def main():
         # Save model
         predictor.save_model()
         
-        # Example prediction
-        sample_data = X_test.iloc[[0]]
-        result = predictor.predict_stability(sample_data)
-        print("\nSample Prediction:")
-        print(f"Stability: {result['stability']}")
-        print(f"Confidence: {result['confidence']:.2f}")
-        print(f"Timestamp: {result['timestamp']}")
-        
+        while True:
+            # Randomly select a row from the dataset
+            random_idx = np.random.randint(0, len(X))
+            sample_data = X.iloc[[random_idx]]
+            actual_stability = "stable" if y[random_idx] == 1 else "unstable"
+            
+            # Make prediction
+            result = predictor.predict_stability(sample_data)
+            
+            # Print input parameters
+            print("\nRandom Sample Data (Row {}):".format(random_idx))
+            print("\nInput Parameters:")
+            for feature, value in zip(X.columns, sample_data.values[0]):
+                print(f"{feature}: {value:.3f}")
+            
+            print("\nPrediction Results:")
+            print(f"Predicted Stability: {result['stability']}")
+            print(f"Confidence: {result['confidence']:.2f}")
+            print(f"Actual Stability: {actual_stability}")
+            print(f"Timestamp: {result['timestamp']}")
+            
+            if 'optimization_suggestions' in result:
+                print("\nOptimization Suggestions:")
+                suggestions = result['optimization_suggestions']
+                
+                if suggestions['overloaded_nodes']:
+                    print("\nOverloaded Nodes:")
+                    for node in suggestions['overloaded_nodes']:
+                        print(f"- {node['node']}: {node['load']:.2f}% load ({node['status']})")
+                
+                if suggestions['underutilized_nodes']:
+                    print("\nUnderutilized Nodes:")
+                    for node in suggestions['underutilized_nodes']:
+                        print(f"- {node['node']}: {node['load']:.2f}% load ({node['status']})")
+                
+                if suggestions['redistribution_suggestions']:
+                    print("\nLoad Redistribution Suggestions:")
+                    for sugg in suggestions['redistribution_suggestions']:
+                        print(f"- Move {sugg['load_to_move']:.2f}% load from {sugg['from_node']} to {sugg['to_node']} (Priority: {sugg['priority']})")
+            
+            # Ask if user wants to continue
+            user_input = input("\nWould you like to see another prediction? (y/n): ")
+            if user_input.lower() != 'y':
+                break
+            
     except Exception as e:
         logger.error("Error in main execution: %s", str(e))
         raise
