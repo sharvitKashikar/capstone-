@@ -50,7 +50,7 @@ The Smart Grid Stability Predictor is an innovative solution designed to:
 - **Visualization Capabilities**
   - Interactive feature importance plots
   - Confusion matrix visualization
-  - ROC curve analysis
+  - ROC-AUC analysis
   - Performance metric dashboards
 
 ## 📊 Dataset Information
