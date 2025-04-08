@@ -214,6 +214,9 @@ The model achieves robust performance metrics:
 - <p align="center">
   <img src="assets/results.png" alt="Feature Importance Analysis" width="800"/>
 </p>
+<p align="center">
+  <img src="assets/result2.png" alt="Feature Importance Analysis" width="800"/>
+</p>
 
 
 ## 🤝 Contributing
